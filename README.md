@@ -6,6 +6,13 @@ with contours that belong to each of them.
 
 Adds **Edit → FX → Colored Outline…**
 
+![No outline, thickness 1, and thickness 2 with square corners](docs/before-after.png)
+
+*Left to right: no outline; thickness 1; thickness 2 with square corners. The
+grey armour picks up a slate-blue contour, the near-white cuffs a lavender one,
+the brown hair a wine-red one — all from one set of sliders. Regenerate with
+`make test`.*
+
 ## How the colour is picked
 
 Every transparent pixel next to the shape looks at its neighbours and adopts
