@@ -7,7 +7,7 @@ local ROOT = app.fs.currentPath
 package.path = app.fs.joinPath(ROOT, "src", "?.lua") .. ";" .. package.path
 
 local apply = require("apply")
-local outline = require("outline")
+local matrix = require("matrix")
 local color = require("color")
 
 local OUT = app.fs.joinPath(ROOT, "out")
@@ -23,7 +23,8 @@ print(("Color.hsvHue = %s"):format(tostring(probe.hsvHue)))
 
 local OPT = {
   hue = 234, hueShift = 45, darken = 0.38, saturate = 0.18,
-  thickness = 1, matrix = outline.MATRIX.circle, alpha = 255,
+  thickness = 1, place = "outside", alpha = 255,
+  offsets = matrix.offsets(matrix.PRESETS.circle),
 }
 
 --- A ten-wide blob with clipped corners, light on top and dark below.

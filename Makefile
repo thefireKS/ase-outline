@@ -8,8 +8,15 @@ BUNDLE   ?= dist/$(EXT).aseprite-extension
 
 all: test
 
-## Both suites write their renders to out/ for eyeballing.
+## Geometry and layer placement assert; the other two also write renders to
+## out/ for eyeballing. The dialog itself cannot run under -b, so nothing here
+## covers it -- that part needs the GUI.
 test:
+	@$(ASEPRITE) -b --script tests/shape_test.lua
+	@$(ASEPRITE) -b --script tests/theme_test.lua
+	@$(ASEPRITE) -b --script tests/targets_test.lua
+	@$(ASEPRITE) -b --script tests/layers_test.lua
+	@$(ASEPRITE) -b --script tests/apply_test.lua
 	@$(ASEPRITE) -b --script tests/outline_test.lua
 	@$(ASEPRITE) -b --script tests/modes_test.lua
 

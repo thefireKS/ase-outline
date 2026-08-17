@@ -6,7 +6,7 @@ local ROOT = app.fs.currentPath
 package.path = app.fs.joinPath(ROOT, "src", "?.lua") .. ";" .. package.path
 
 local apply = require("apply")
-local outline = require("outline")
+local matrix = require("matrix")
 
 local OUT = app.fs.joinPath(ROOT, "out")
 if not app.fs.isDirectory(OUT) then app.fs.makeDirectory(OUT) end
@@ -83,7 +83,8 @@ end
 
 local BASE = {
   hue = 234, hueShift = 45, darken = 0.38, saturate = 0.18,
-  thickness = 1, matrix = outline.MATRIX.circle, alpha = 255,
+  thickness = 1, place = "outside", alpha = 255,
+  offsets = matrix.offsets(matrix.PRESETS.circle),
 }
 
 local function with(over)
@@ -103,8 +104,27 @@ assert(image.width == W + 2 and image.height == H + 2, "thickness 1 grows by one
 assert(position.x == 2 and position.y == 2, "outline cel shifts back by the thickness")
 save(sprite, "after.png")
 
-local thick = outlined(with{ thickness = 2, matrix = outline.MATRIX.square })
+local thick = outlined(with{ thickness = 2,
+  offsets = matrix.offsets(matrix.PRESETS.square) })
 save(thick, "after_thick.png")
+
+-- An inward rim, which has to render in front of the art rather than behind it.
+local inside = buildSprite()
+local insideCel = inside.cels[1]
+local insideImage, insidePos = apply.forCel(insideCel, with{ place = "inside" })
+assert(insideImage, "inside produced nothing")
+assert(insideImage.width == W and insideImage.height == H,
+  "an inward outline must not grow the cel")
+local insideLayer = inside:newLayer()
+insideLayer.name = "outline"
+inside:newCel(insideLayer, 1, insideImage, insidePos)
+assert(insideLayer.stackIndex > insideCel.layer.stackIndex,
+  "an inward outline has to sit in front of the art")
+save(inside, "after_inside.png")
+
+-- Bottom row only: the per-side control the 3x3 mask exists for.
+local bottom = outlined(with{ thickness = 2, offsets = matrix.offsets(1 << 7) })
+save(bottom, "after_bottom.png")
 
 -- The hue cap is the whole reason `hueShift` is in degrees: brown hair must
 -- not come out magenta.

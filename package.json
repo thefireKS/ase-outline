@@ -2,7 +2,7 @@
   "name": "ase-outline",
   "displayName": "Colored Outline",
   "description": "Outlines that take their colour from the art they touch.",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "author": {
     "name": "thefireKS"
   },
